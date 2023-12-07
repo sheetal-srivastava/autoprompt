@@ -49,7 +49,8 @@ class PredictWrapper:
         trigger_mask = model_inputs.pop('trigger_mask')
         predict_mask = model_inputs.pop('predict_mask')
         model_inputs = replace_trigger_tokens(model_inputs, trigger_ids, trigger_mask)
-        logits, *_ = self._model(**model_inputs)
+        # logits, *_ = self._model(**model_inputs)
+        logits = self._model(**model_inputs).logits # Change this transformers library call to accomodate higher version
         predict_logits = logits.masked_select(predict_mask.unsqueeze(-1)).view(logits.size(0), -1)
         return predict_logits
 
